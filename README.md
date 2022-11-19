@@ -1,5 +1,9 @@
 # shipit
 
+Generate AWS Security Hub findings into a centralized event bus from all regions in all organization accounts.
+
+These are pulled from the Cloud Watch Logs using Subscription filters for ```error``` and ```timeout``` events.
+
 ### Dependency
 
 ```python
