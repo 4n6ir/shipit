@@ -75,7 +75,7 @@ class ShipitStack(Stack):
 
         layer = _lambda.LayerVersion.from_layer_version_arn(
             self, 'layer',
-            layer_version_arn = 'arn:aws:lambda:'+region+':070176467818:layer:getpublicip:5'
+            layer_version_arn = 'arn:aws:lambda:'+region+':070176467818:layer:getpublicip:9'
         )
 
     ### IAM ROLE ###
@@ -109,17 +109,17 @@ class ShipitStack(Stack):
         error = _lambda.Function(
             self, 'error',
             function_name = 'shipit-error',
-            runtime = _lambda.Runtime.PYTHON_3_10,
+            runtime = _lambda.Runtime.PYTHON_3_11,
             code = _lambda.Code.from_asset('error'),
             handler = 'error.handler',
             role = role,
             environment = dict(
-                ACCOUNT = account,
+                AWS_ACCOUNT = account,
                 REGION = region
             ),
             architecture = _lambda.Architecture.ARM_64,
-            timeout = Duration.seconds(60),
-            memory_size = 256,
+            timeout = Duration.seconds(30),
+            memory_size = 128,
             layers = [
                 layer
             ]
@@ -128,7 +128,7 @@ class ShipitStack(Stack):
         errorlogs = _logs.LogGroup(
             self, 'errorlogs',
             log_group_name = '/aws/lambda/'+error.function_name,
-            retention = _logs.RetentionDays.ONE_WEEK,
+            retention = _logs.RetentionDays.ONE_MONTH,
             removal_policy = RemovalPolicy.DESTROY
         )
 
@@ -137,17 +137,17 @@ class ShipitStack(Stack):
         timeout = _lambda.Function(
             self, 'timeout',
             function_name = 'shipit-timeout',
-            runtime = _lambda.Runtime.PYTHON_3_10,
+            runtime = _lambda.Runtime.PYTHON_3_11,
             code = _lambda.Code.from_asset('timeout'),
             handler = 'timeout.handler',
             role = role,
             environment = dict(
-                ACCOUNT = account,
+                AWS_ACCOUNT = account,
                 REGION = region
             ),
             architecture = _lambda.Architecture.ARM_64,
-            timeout = Duration.seconds(60),
-            memory_size = 256,
+            timeout = Duration.seconds(30),
+            memory_size = 128,
             layers = [
                 layer
             ]
@@ -156,6 +156,6 @@ class ShipitStack(Stack):
         timeoutlogs = _logs.LogGroup(
             self, 'timeoutlogs',
             log_group_name = '/aws/lambda/'+timeout.function_name,
-            retention = _logs.RetentionDays.ONE_WEEK,
+            retention = _logs.RetentionDays.ONE_MONTH,
             removal_policy = RemovalPolicy.DESTROY
         )

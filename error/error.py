@@ -12,7 +12,7 @@ def handler(event, context):
     base64data = base64.b64decode(event['awslogs']['data'])
     gzipdata = gzip.decompress(base64data).decode()
 
-    account = os.environ['ACCOUNT']
+    account = os.environ['AWS_ACCOUNT']
     region = os.environ['REGION']
 
     now = datetime.now(timezone.utc).isoformat().replace('+00:00','Z')
