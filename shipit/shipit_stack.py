@@ -73,9 +73,9 @@ class ShipitStack(Stack):
 
     ### LAMBDA LAYER ###
 
-        layer = _lambda.LayerVersion.from_layer_version_arn(
-            self, 'layer',
-            layer_version_arn = 'arn:aws:lambda:'+region+':070176467818:layer:getpublicip:9'
+        getpublicip = _lambda.LayerVersion.from_layer_version_arn(
+            self, 'getpublicip',
+            layer_version_arn = 'arn:aws:lambda:'+region+':070176467818:layer:getpublicip:10'
         )
 
     ### IAM ROLE ###
@@ -109,7 +109,7 @@ class ShipitStack(Stack):
         error = _lambda.Function(
             self, 'error',
             function_name = 'shipit-error',
-            runtime = _lambda.Runtime.PYTHON_3_11,
+            runtime = _lambda.Runtime.PYTHON_3_12,
             code = _lambda.Code.from_asset('error'),
             handler = 'error.handler',
             role = role,
@@ -121,7 +121,7 @@ class ShipitStack(Stack):
             timeout = Duration.seconds(30),
             memory_size = 128,
             layers = [
-                layer
+                getpublicip
             ]
         )
 
@@ -137,7 +137,7 @@ class ShipitStack(Stack):
         timeout = _lambda.Function(
             self, 'timeout',
             function_name = 'shipit-timeout',
-            runtime = _lambda.Runtime.PYTHON_3_11,
+            runtime = _lambda.Runtime.PYTHON_3_12,
             code = _lambda.Code.from_asset('timeout'),
             handler = 'timeout.handler',
             role = role,
@@ -149,7 +149,7 @@ class ShipitStack(Stack):
             timeout = Duration.seconds(30),
             memory_size = 128,
             layers = [
-                layer
+                getpublicip
             ]
         )
 
